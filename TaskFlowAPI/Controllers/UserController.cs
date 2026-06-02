@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TaskFlowAPI.DTOs;
 using TaskFlowAPI.Services;
@@ -8,6 +9,7 @@ namespace TaskFlowAPI.Controllers
     [Route("api/[controller]")]
     public class UserController(IUserService userService) : ControllerBase
     {
+        [Authorize (Roles = "Admin")]
         [HttpGet("getusers")]
         public async Task<IActionResult> GetAllUsers()
         {
