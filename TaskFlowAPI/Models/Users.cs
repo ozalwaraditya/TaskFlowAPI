@@ -4,7 +4,7 @@ using TaskFlowAPI.Enums;
 namespace TaskFlowAPI.Models;
 
 [Table("Users")]
-public class Users
+public class User
 {
     [Column("user_id")]
     public int UserId { get; set; }

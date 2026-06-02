@@ -2,29 +2,36 @@ using Microsoft.AspNetCore.Mvc;
 using TaskFlowAPI.DTOs;
 using TaskFlowAPI.Services;
 
-namespace TaskFlowAPI.Controllers;
-
-[ApiController]
-[Route("api/[controller]")]
-public class UserController : ControllerBase
+namespace TaskFlowAPI.Controllers
 {
-    private readonly IUserService _userService;
-
-    public UserController(IUserService userService)
+    [ApiController]
+    [Route("api/[controller]")]
+    public class UserController(IUserService userService) : ControllerBase
     {
-        _userService = userService;
-    }
-
-    [HttpGet("getusers")]
-    public async Task<IActionResult> GetUsers()
-    {
-        var response = await _userService.GetAllUsers();
-
-        if (!response.IsSuccess)
+        [HttpGet("getusers")]
+        public async Task<IActionResult> GetAllUsers()
         {
-            return BadRequest(response);
-        }
+            var response = new ResponseDTO();
 
-        return Ok(response);
+            try
+            {
+                var users = await userService.GetAllUsers();
+
+                response.IsSuccess = true;
+                response.Message = "Users fetched successfully";
+                response.Response = users;
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                response.IsSuccess = false;
+                response.Message = ex.Message;
+
+                return BadRequest(response);
+            }
+        }
+        
+        
     }
 }

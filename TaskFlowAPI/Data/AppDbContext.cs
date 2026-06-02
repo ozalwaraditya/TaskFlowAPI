@@ -11,7 +11,7 @@ public class AppDbContext : DbContext
     }
 
     public DbSet<Project> Projects => Set<Project>();
-    public DbSet<Users> Users => Set<Users>();
+    public DbSet<User> Users => Set<User>();
     
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -26,7 +26,7 @@ public class AppDbContext : DbContext
             entity.Property(p => p.CreatedAt).HasDefaultValueSql("CURRENT_TIMESTAMP");
         });
 
-        modelBuilder.Entity<Users>(entity =>
+        modelBuilder.Entity<User>(entity =>
         {
             entity.HasKey(p => p.UserId);
             entity.Property(p=>p.CreatedAt).HasDefaultValueSql("CURRENT_TIMESTAMP");

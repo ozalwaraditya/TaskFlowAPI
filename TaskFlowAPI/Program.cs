@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using TaskFlowAPI.Data;
+using TaskFlowAPI.Models;
 using TaskFlowAPI.Repository;
 using TaskFlowAPI.Repository.IRepository;
 using TaskFlowAPI.Services;
@@ -18,6 +19,9 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IUserService, UserService>();
+
+builder.Services.AddAutoMapper(typeof(MappingProfile));
+builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("Jwt"));
 
 var app = builder.Build();
 

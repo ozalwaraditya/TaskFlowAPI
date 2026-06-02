@@ -4,5 +4,7 @@ namespace TaskFlowAPI.Repository.IRepository;
 
 public interface IUserRepository
 {
-    Task<IEnumerable<Users>> GetAllUsers();
+    Task<IEnumerable<User>> GetAllUsers();
+    Task<User?> GetUserByEmail(string email);
+    Task<User?> AddUser(User user);
 }
