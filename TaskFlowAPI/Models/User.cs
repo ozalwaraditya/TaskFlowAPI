@@ -3,7 +3,7 @@ using TaskFlowAPI.Enums;
 
 namespace TaskFlowAPI.Models;
 
-[Table("Users")]
+[Table("users")]
 public class User
 {
     [Column("user_id")]
@@ -23,4 +23,9 @@ public class User
     
     [Column("created_at")]
     public DateTime CreatedAt { get; set; }
+
+    public ICollection<ProjectMember> ProjectMembers { get; set; }
+    public ICollection<Comment> Comments { get; set; }
+
+    public ICollection<TaskItem> TaskItems { get; set; }
 }

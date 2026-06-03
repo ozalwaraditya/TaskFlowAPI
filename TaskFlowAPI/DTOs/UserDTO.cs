@@ -2,7 +2,7 @@ using TaskFlowAPI.Enums;
 
 namespace TaskFlowAPI.DTOs;
 
-public class UserDTO
+public class UserDto
 {
     public int UserId { get; set; }
     public string Username { get; set; }

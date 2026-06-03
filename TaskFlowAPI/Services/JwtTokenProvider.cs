@@ -17,7 +17,7 @@ public class JwtTokenProvider
         _jwtSettings = jwtSettings.Value;
     }
     
-    public string GenerateJwtToken(UserDTO userDto)
+    public string GenerateJwtToken(UserDto userDto)
     {
         var claims = new[]
         {
