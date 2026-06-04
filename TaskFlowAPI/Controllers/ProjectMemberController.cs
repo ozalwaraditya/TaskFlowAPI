@@ -19,6 +19,7 @@ public class ProjectMemberController : ControllerBase
         _logger = logger;
     }
 
+    [Authorize(Roles = "Admin, Manager")]
     [HttpPost("{projectId}/members")]
     public async Task<IActionResult> AddMember(int projectId, [FromBody] AddProjectMemberDto request)
     {
@@ -35,6 +36,7 @@ public class ProjectMemberController : ControllerBase
     }
 
     [HttpGet("{projectId}/members")]
+    [Authorize(Roles = "Admin, Manager")]
     public async Task<IActionResult> GetMembers(int projectId)
     {
         _logger.LogInformation("Getting members for {projectId}", projectId);
@@ -49,6 +51,7 @@ public class ProjectMemberController : ControllerBase
     }
 
     [HttpDelete("{projectId}/members/{userId}")]
+    [Authorize(Roles = "Admin, Manager")]
     public async Task<IActionResult> RemoveMember(int projectId, int userId)
     {
         _logger.LogInformation("Removing member {userId}", userId);

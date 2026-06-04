@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TaskFlowAPI.Services;
 
@@ -16,6 +17,7 @@ namespace TaskFlowAPI.Controllers
 
         // GET /api/users
         [HttpGet]
+        [Authorize(Roles = "Admin, Manager")]
         public async Task<IActionResult> GetAll()
         {
             return Ok(await _userService.GetAllUsers());
@@ -23,6 +25,7 @@ namespace TaskFlowAPI.Controllers
 
         // GET /api/users/{userId}
         [HttpGet("{userId}")]
+        [Authorize(Roles = "Admin, Manager")]
         public async Task<IActionResult> GetById(int userId)
         {
             var user = await _userService.GetUserById(userId);
@@ -31,6 +34,7 @@ namespace TaskFlowAPI.Controllers
 
         // DELETE /api/users/{userId}
         [HttpDelete("{userId}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int userId)
         {
             var result = await _userService.DeleteUser(userId);

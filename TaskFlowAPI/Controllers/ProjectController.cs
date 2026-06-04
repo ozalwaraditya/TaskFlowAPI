@@ -12,7 +12,9 @@ namespace TaskFlowAPI.Controllers
     public class ProjectController(IProjectService projectService, ILogger<ProjectController> logger) : ControllerBase
     {
         private readonly ILogger<ProjectController> _logger = logger;
+        
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> CreateProject([FromBody] ProjectDto projectDto)
         {
             string? userIdClaim = User.FindFirstValue(ClaimTypes.Sid);
@@ -73,6 +75,7 @@ namespace TaskFlowAPI.Controllers
         }
 
         [HttpGet("{projectId:int}")]
+        [Authorize(Roles = "Admin, Manager")]
         public async Task<IActionResult> GetProjectById(int projectId)
         {
             var project = await projectService.GetProjectByProjectId(projectId);
