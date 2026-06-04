@@ -23,5 +23,4 @@ public class TaskItem
 
     [Column("assigned_to")]
     public int AssignedTo { get; set; }
-    public ICollection<Comment> Comments { get; set; }
 }

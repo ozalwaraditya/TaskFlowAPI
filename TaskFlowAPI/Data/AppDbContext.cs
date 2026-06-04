@@ -14,7 +14,6 @@ public class AppDbContext : DbContext
     public DbSet<Project> Projects => Set<Project>();
     public DbSet<User> Users => Set<User>();
     public DbSet<TaskItem> TaskItems => Set<TaskItem>();
-    public DbSet<Comment> Comments => Set<Comment>();
     public DbSet<ProjectMember> ProjectMembers => Set<ProjectMember>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -56,16 +55,6 @@ public class AppDbContext : DbContext
         // =========================
         // Relationships
         // =========================
-
-        modelBuilder.Entity<Comment>()
-            .HasOne(c => c.User)
-            .WithMany(u => u.Comments)
-            .HasForeignKey(c => c.UserId);
-
-        modelBuilder.Entity<Comment>()
-            .HasOne(c => c.TaskItem)
-            .WithMany(t => t.Comments)
-            .HasForeignKey(c => c.TaskItemId);
 
         modelBuilder.Entity<TaskItem>()
             .HasOne(t => t.Project)
@@ -206,34 +195,6 @@ public class AppDbContext : DbContext
                 Status = TaskItemStatus.Open,
                 ProjectId = 2,
                 AssignedTo = 3
-            }
-        );
-
-        // =========================
-        // Seed Comments
-        // =========================
-
-        modelBuilder.Entity<Comment>().HasData(
-            new Comment
-            {
-                CommentId = 1,
-                Message = "Authentication service created.",
-                TaskItemId = 1,
-                UserId = 3
-            },
-            new Comment
-            {
-                CommentId = 2,
-                Message = "JWT middleware integrated.",
-                TaskItemId = 2,
-                UserId = 4
-            },
-            new Comment
-            {
-                CommentId = 3,
-                Message = "UI design approved.",
-                TaskItemId = 3,
-                UserId = 3
             }
         );
     }

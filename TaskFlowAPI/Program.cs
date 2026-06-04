@@ -24,11 +24,13 @@ builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IProjectMemberRepository, ProjectMemberRepository>();
 builder.Services.AddScoped<IProjectRepository, ProjectRepository>();
 builder.Services.AddScoped<IProjectMemberRepository, ProjectMemberRepository>();
+builder.Services.AddScoped<ITaskItemRepository, TaskItemRepository>();
 
 //Services
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IProjectService, ProjectService>();
 builder.Services.AddScoped<IProjectMemberService, ProjectMemberService>();
+builder.Services.AddScoped<ITaskItemService, TaskItemService>();
 
 builder.Services.AddAutoMapper(typeof(MappingProfile));
 builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("Jwt"));

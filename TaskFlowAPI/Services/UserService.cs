@@ -24,30 +24,50 @@ public class UserService : IUserService
         return _mapper.Map<IEnumerable<UserDto>>(users);
     }
 
+    public async Task<UserDto?> GetUserById(int userId)
+    {
+        var user = await _userRepository.GetUserById(userId);
+        return user == null ? null : _mapper.Map<UserDto>(user);
+    }
+
     public async Task<UserDto?> LoginUser(LoginRequestBody loginRequestBody)
     {
         var dbUser = await _userRepository.GetUserByEmail(loginRequestBody.Email);
-        
-        if(dbUser == null) 
-            return new UserDto();
-        
+
+        if (dbUser == null)
+            return null;
+
         var isValid = BCrypt.Net.BCrypt.Verify(loginRequestBody.Password, dbUser.Password);
-       
-        return !isValid ? new UserDto() : _mapper.Map<UserDto>(dbUser);
+
+        return !isValid ? null : _mapper.Map<UserDto>(dbUser);
     }
 
     public async Task<UserDto?> RegisterUser(RegisterRequestBody registerRequestBody)
     {
         var existingUser = await _userRepository.GetUserByEmail(registerRequestBody.Email);
 
-        if (existingUser is not null)
-            return _mapper.Map<UserDto>(existingUser);
+        if (existingUser != null)
+            return null;
 
         var user = _mapper.Map<User>(registerRequestBody);
         user.Password = BCrypt.Net.BCrypt.HashPassword(registerRequestBody.Password);
+        user.CreatedAt = DateTime.UtcNow;
 
         var createdUser = await _userRepository.AddUser(user);
 
         return _mapper.Map<UserDto>(createdUser);
+    }
+
+    public async Task<bool> DeleteUser(int userId)
+    {
+        var user = await _userRepository.GetUserById(userId);
+
+        if (user == null)
+            return false;
+
+        await _userRepository.DeleteUser(user);
+        await _userRepository.Save();
+
+        return true;
     }
 }

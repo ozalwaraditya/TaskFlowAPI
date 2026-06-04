@@ -25,7 +25,6 @@ public class User
     public DateTime CreatedAt { get; set; }
 
     public ICollection<ProjectMember> ProjectMembers { get; set; }
-    public ICollection<Comment> Comments { get; set; }
 
     public ICollection<TaskItem> TaskItems { get; set; }
 }
