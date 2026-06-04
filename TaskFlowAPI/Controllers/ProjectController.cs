@@ -9,8 +9,9 @@ namespace TaskFlowAPI.Controllers
     [Authorize]
     [ApiController]
     [Route("api/projects")]
-    public class ProjectController(IProjectService projectService) : ControllerBase
+    public class ProjectController(IProjectService projectService, ILogger<ProjectController> logger) : ControllerBase
     {
+        private readonly ILogger<ProjectController> _logger = logger;
         [HttpPost]
         public async Task<IActionResult> CreateProject([FromBody] ProjectDto projectDto)
         {
@@ -18,12 +19,14 @@ namespace TaskFlowAPI.Controllers
 
             if (!int.TryParse(userIdClaim, out int userId))
             {
+                _logger.LogWarning("Unauthorized project creation attempt. Invalid SID claim.");
                 return Unauthorized(new ResponseDTO
                 {
                     IsSuccess = false,
                     Message = "Unauthorized"
                 });
             }
+            _logger.LogInformation("User {UserId} is creating a project with name {ProjectName}", userId, projectDto.ProjectName);
 
             var project = await projectService.CreateProject(projectDto, userId);
             
@@ -36,6 +39,7 @@ namespace TaskFlowAPI.Controllers
                 });
             }
 
+            _logger.LogInformation("Project {ProjectId} created successfully by User {UserId}", project.ProjectName, userId);
             return StatusCode(StatusCodes.Status201Created, new ResponseDTO
             {
                 IsSuccess = true,

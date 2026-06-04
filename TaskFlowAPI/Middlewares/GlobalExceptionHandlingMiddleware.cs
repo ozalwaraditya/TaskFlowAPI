@@ -7,10 +7,12 @@ namespace TaskFlowAPI.Middlewares;
 public class GlobalExceptionHandlingMiddleware
 {
     private readonly RequestDelegate _next;
+    private readonly ILogger<GlobalExceptionHandlingMiddleware> _logger;
 
-    public GlobalExceptionHandlingMiddleware(RequestDelegate next)
+    public GlobalExceptionHandlingMiddleware(RequestDelegate next,  ILogger<GlobalExceptionHandlingMiddleware> logger)
     {
         _next = next;
+        _logger = logger;
     }
 
     public async Task InvokeAsync(HttpContext context)
@@ -21,6 +23,9 @@ public class GlobalExceptionHandlingMiddleware
         }
         catch (Exception ex)
         {
+
+            _logger.LogError(ex, "Unhandled exception occurred while processing request {Method} {Path}", 
+                context.Request.Method, context.Request.Path);
 
             context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
             context.Response.ContentType = "application/json";

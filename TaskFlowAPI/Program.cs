@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Serilog;
 using TaskFlowAPI.Data;
 using TaskFlowAPI.Middlewares;
 using TaskFlowAPI.Models;
@@ -59,8 +60,21 @@ builder.Services
     });
 
 builder.Services.AddAuthorization();
+builder.Host.UseSerilog(); 
 
 var app = builder.Build();
+
+Log.Logger = new LoggerConfiguration()
+    .ReadFrom.Configuration(builder.Configuration)
+    .Enrich.FromLogContext()
+    .WriteTo.Console()
+    .WriteTo.File(path: Path.Combine(AppContext.BaseDirectory, "logs", "app.log"),
+        fileSizeLimitBytes: 10_000_000,   // 10 MB max
+        rollOnFileSizeLimit: true,        // creates new file when full
+        retainedFileCountLimit: 1          // keep only 1 file
+        )
+    .CreateLogger();
+
 
 if (app.Environment.IsDevelopment())
 {

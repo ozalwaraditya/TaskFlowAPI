@@ -11,18 +11,20 @@ namespace TaskFlowAPI.Controllers;
 public class AuthController : ControllerBase
 {
     private readonly IUserService _userService;
-    private readonly JwtSettings _jwtSettings;
     private readonly JwtTokenProvider _jwtTokenProvider;
+    private readonly ILogger<AuthController> _logger;
 
-    public AuthController(IUserService userService, IOptions<JwtSettings> jwtOptions)
+    public AuthController(IUserService userService, IOptions<JwtSettings> jwtOptions, ILogger<AuthController> logger)
     {
         _userService = userService;
         _jwtTokenProvider = new JwtTokenProvider(jwtOptions);
+        _logger = logger;
     }
 
     [HttpPost("login")]
     public async Task<ResponseDTO> Login([FromBody] LoginRequestBody loginRequest)
     {
+        _logger.LogInformation("Login attempt for email {Email}", loginRequest.Email);
         var user = await _userService.LoginUser(loginRequest);
 
         if (user == null)
@@ -35,6 +37,8 @@ public class AuthController : ControllerBase
         }
 
         var accessToken = _jwtTokenProvider.GenerateJwtToken(user);
+
+        _logger.LogInformation("User {UserId} logged in successfully", user.UserId);
 
         return new ResponseDTO
         {
@@ -67,6 +71,4 @@ public class AuthController : ControllerBase
             Response = accessToken
         };
     }
-    
-    
 }

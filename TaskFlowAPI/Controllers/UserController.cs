@@ -1,6 +1,4 @@
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using TaskFlowAPI.DTOs;
 using TaskFlowAPI.Services;
 
 namespace TaskFlowAPI.Controllers

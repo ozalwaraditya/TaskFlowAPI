@@ -11,17 +11,21 @@ namespace TaskFlowAPI.Controllers;
 public class ProjectMemberController : ControllerBase
 {
     private readonly IProjectMemberService _projectMemberService;
+    private readonly ILogger<ProjectMemberController> _logger;
 
-    public ProjectMemberController(IProjectMemberService projectMemberService)
+    public ProjectMemberController(IProjectMemberService projectMemberService, ILogger<ProjectMemberController> logger)
     {
         _projectMemberService = projectMemberService;
+        _logger = logger;
     }
 
     [HttpPost("{projectId}/members")]
     public async Task<IActionResult> AddMember(int projectId, [FromBody] AddProjectMemberDto request)
     {
+        _logger.LogInformation("Adding member {@request}", request);
         var memberId = await _projectMemberService.CreateProjectMember(projectId, request.UserId);
 
+        _logger.LogInformation("Member {@memberId} added", memberId);
         return Ok(new ResponseDTO
         {
             IsSuccess = true,
@@ -33,8 +37,9 @@ public class ProjectMemberController : ControllerBase
     [HttpGet("{projectId}/members")]
     public async Task<IActionResult> GetMembers(int projectId)
     {
+        _logger.LogInformation("Getting members for {projectId}", projectId);
         var members = await _projectMemberService.GetProjectMembersByProjectId(projectId);
-
+        _logger.LogInformation("Getting members for {projectId}", projectId);
         return Ok(new ResponseDTO
         {
             IsSuccess = true,
@@ -46,10 +51,12 @@ public class ProjectMemberController : ControllerBase
     [HttpDelete("{projectId}/members/{userId}")]
     public async Task<IActionResult> RemoveMember(int projectId, int userId)
     {
+        _logger.LogInformation("Removing member {userId}", userId);
         var removed = await _projectMemberService.RemoveProjectMember(projectId, userId);
 
         if (!removed)
         {
+            _logger.LogError("Removing member {userId} failed", userId);
             return NotFound(new ResponseDTO
             {
                 IsSuccess = false,
@@ -57,6 +64,7 @@ public class ProjectMemberController : ControllerBase
             });
         }
 
+        _logger.LogInformation("Removed member {userId}", userId);
         return Ok(new ResponseDTO
         {
             IsSuccess = true,
